@@ -407,3 +407,39 @@
                 document.getElementById('net-profit').innerText = '০';
                 return;
             }
+
+            let html = '';
+            let totalExp = 0;
+            let totalInc = 0;
+
+            transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            transactions.forEach(t => {
+                if(t.type === 'expense') totalExp += t.amount;
+                else totalInc += t.amount;
+
+                const typeBadge = t.type === 'expense' ? 
+                    '<span style="color: var(--danger); font-weight:600;">খরচ</span>' : 
+                    '<span style="color: var(--success); font-weight:600;">আয়</span>';
+
+                html += `<tr>
+                    <td>${t.date}</td>
+                    <td>${t.desc}</td>
+                    <td>${typeBadge}</td>
+                    <td class="text-right">৳ ${t.amount.toLocaleString('en-IN')}</td>
+                    <td class="text-right"><button class="btn btn-danger" onclick="deleteTransaction(${t.id})">মুছুন</button></td>
+                </tr>`;
+            });
+
+            tbody.innerHTML = html;
+            document.getElementById('total-expense').innerText = totalExp.toLocaleString('en-IN');
+            document.getElementById('total-income').innerText = totalInc.toLocaleString('en-IN');
+            
+            const net = totalInc - totalExp;
+            const netElem = document.getElementById('net-profit');
+            netElem.innerText = net.toLocaleString('en-IN');
+            netElem.style.color = net >= 0 ? 'var(--success)' : 'var(--danger)';
+        }
+    </script>
+</body>
+</html>
