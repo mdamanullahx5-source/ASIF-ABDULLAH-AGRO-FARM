@@ -188,7 +188,6 @@
             text-align: right;
         }
 
-        /* Sync status note */
         .sync-note {
             background-color: #e8f5e9;
             color: #2e7d32;
@@ -215,10 +214,10 @@
 
     <div class="container">
 
-        <!-- Gmail Sync Login Card -->
+        <!-- Gmail Login Card -->
         <div class="card" id="login-card">
-            <h2><i class="fas fa-envelope"></i> জিমেইল দিয়ে আপনার হিসাব নিরাপদ রাখুন</h2>
-            <p style="margin-bottom: 15px; font-size: 0.95rem; color: #555;">আপনার জিমেইল আইডি এন্ট্রি করলে এই ব্রাউজারে বা ডিভাইসে আপনার ফার্মের হিসাব আলাদাভাবে সেভ থাকবে এবং পরবর্তীতে দেখতে পাবেন।</p>
+            <h2><i class="fas fa-envelope"></i> জিমেইল দিয়ে আপনার হিসাব সুরক্ষিত রাখুন</h2>
+            <p style="margin-bottom: 15px; font-size: 0.95rem; color: #555;">আপনার জিমেইল আইডি এন্ট্রি করলে এই ব্রাউজারে আপনার ফার্মের হিসাব আলাদাভাবে সেভ থাকবে।</p>
             <div class="form-grid" style="max-width: 500px;">
                 <div class="form-group">
                     <label>আপনার জিমেইল (Gmail) লিখুন:</label>
@@ -228,11 +227,11 @@
             <button class="btn" onclick="saveUserEmail()">হিসাব শুরু করুন</button>
         </div>
 
-        <!-- Dashboard Content (Hidden until email entered) -->
+        <!-- Dashboard Content -->
         <div id="dashboard-content" style="display: none;">
 
             <div class="sync-note">
-                <i class="fas fa-check-circle"></i> আপনার জিমেইলের (<span id="active-email-span"></span>) হিসাব সফলভাবে লোড হয়েছে। ডেটা ব্রাউজারে স্বয়ংক্রিয়ভাবে সংরক্ষিত হচ্ছে।
+                <i class="fas fa-check-circle"></i> জিমেইল: (<span id="active-email-span"></span>) - হিসাব স্বয়ংক্রিয়ভাবে সংরক্ষিত হচ্ছে।
             </div>
 
             <!-- Summary Stats -->
@@ -260,8 +259,20 @@
                         <input type="date" id="t-date">
                     </div>
                     <div class="form-group">
-                        <label>খাতের নাম (যেমন: ফিড ক্রয়, মুরগি বিক্রি):</label>
-                        <input type="text" id="t-desc" placeholder="বিবরণ লিখুন">
+                        <label>খাতের নাম:</label>
+                        <select id="t-desc" onchange="checkCustomDesc(this)">
+                            <option value="ফিড ক্রয়">ফিড ক্রয়</option>
+                            <option value="মুরগি বিক্রি">মুরগি বিক্রি</option>
+                            <option value="ডিম বিক্রি">ডিম বিক্রি</option>
+                            <option value="মেডিসিন ও ভিটামিন">মেডিসিন ও ভিটামিন</option>
+                            <option value="কারেন্ট বিল">কারেন্ট বিল</option>
+                            <option value="শ্রমিক খরচ">শ্রমিক খরচ</option>
+                            <option value="অন্যান্য">অন্যান্য (নিজে লিখুন)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="custom-desc-group" style="display: none;">
+                        <label>অন্যান্য খাত লিখুন:</label>
+                        <input type="text" id="t-custom-desc" placeholder="বিবরণ লিখুন">
                     </div>
                     <div class="form-group">
                         <label>ধরণ:</label>
@@ -286,7 +297,7 @@
                         <thead>
                             <tr>
                                 <th>তারিখ</th>
-                                <th>বিবরণ</th>
+                                <th>খাতের নাম</th>
                                 <th>ধরণ</th>
                                 <th class="text-right">পরিমাণ</th>
                                 <th class="text-right">পদক্ষেপ</th>
@@ -338,6 +349,15 @@
             loadTransactions();
         }
 
+        function checkCustomDesc(selectObj) {
+            const customGroup = document.getElementById('custom-desc-group');
+            if(selectObj.value === 'অন্যান্য') {
+                customGroup.style.display = 'flex';
+            } else {
+                customGroup.style.display = 'none';
+            }
+        }
+
         function loadTransactions() {
             const data = localStorage.getItem('poultry_data_' + currentUser);
             transactions = data ? JSON.parse(data) : [];
@@ -350,7 +370,10 @@
 
         function addTransaction() {
             const date = document.getElementById('t-date').value;
-            const desc = document.getElementById('t-desc').value.trim();
+            let desc = document.getElementById('t-desc').value;
+            if(desc === 'অন্যান্য') {
+                desc = document.getElementById('t-custom-desc').value.trim();
+            }
             const type = document.getElementById('t-type').value;
             const amount = parseFloat(document.getElementById('t-amount').value);
 
@@ -363,8 +386,10 @@
             saveTransactionsToStorage();
             renderTable();
 
-            document.getElementById('t-desc').value = '';
             document.getElementById('t-amount').value = '';
+            document.getElementById('t-custom-desc').value = '';
+            document.getElementById('t-desc').value = 'ফিড ক্রয়';
+            document.getElementById('custom-desc-group').style.display = 'none';
         }
 
         function deleteTransaction(id) {
@@ -376,45 +401,9 @@
         function renderTable() {
             const tbody = document.getElementById('transaction-list');
             if(transactions.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #777;">কোনো হিসাবের এন্ট্রি নেই।</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #777;">কোনো হিসাব পাওয়া যায়নি।</td></tr>';
                 document.getElementById('total-expense').innerText = '০';
                 document.getElementById('total-income').innerText = '০';
                 document.getElementById('net-profit').innerText = '০';
                 return;
             }
-
-            let html = '';
-            let totalExp = 0;
-            let totalInc = 0;
-
-            transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-            transactions.forEach(t => {
-                if(t.type === 'expense') totalExp += t.amount;
-                else totalInc += t.amount;
-
-                const typeBadge = t.type === 'expense' ? 
-                    '<span style="color: var(--danger); font-weight:600;">খরচ</span>' : 
-                    '<span style="color: var(--success); font-weight:600;">আয়</span>';
-
-                html += `<tr>
-                    <td>${t.date}</td>
-                    <td>${t.desc}</td>
-                    <td>${typeBadge}</td>
-                    <td class="text-right">৳ ${t.amount.toLocaleString('en-IN')}</td>
-                    <td class="text-right"><button class="btn btn-danger" onclick="deleteTransaction(${t.id})">মুছুন</button></td>
-                </tr>`;
-            });
-
-            tbody.innerHTML = html;
-            document.getElementById('total-expense').innerText = totalExp.toLocaleString('en-IN');
-            document.getElementById('total-income').innerText = totalInc.toLocaleString('en-IN');
-            
-            const net = totalInc - totalExp;
-            const netElem = document.getElementById('net-profit');
-            netElem.innerText = net.toLocaleString('en-IN');
-            netElem.style.color = net >= 0 ? 'var(--success)' : 'var(--danger)';
-        }
-    </script>
-</body>
-</html>
