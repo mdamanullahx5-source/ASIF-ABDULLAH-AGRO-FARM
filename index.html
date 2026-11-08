@@ -268,11 +268,12 @@
             <!-- Category Navigation Tabs -->
             <div class="tabs-nav">
                 <button class="tab-btn active" onclick="switchTab('layer')"><i class="fas fa-egg"></i> ১. ডিমের মুরগি (Layer)</button>
-                <button class="tab-btn" onclick="switchTab('incubator')"><i class="fas fa-box-open"></i> ২. ইনকিউবেটর ও বাচ্চা</button>
-                <button class="tab-btn" onclick="switchTab('broiler')"><i class="fas fa-drumstick-bite"></i> ৩. মাংসের মুরগি (Broiler)</button>
-                <button class="tab-btn" onclick="switchTab('sonali')"><i class="fas fa-feather-alt"></i> ৪. সোনালী ও দেশি মুরগি</button>
-                <button class="tab-btn" onclick="switchTab('feedmed')"><i class="fas fa-pills"></i> ৫. ফিড ও মেডিসিন স্টক</button>
-                <button class="tab-btn" onclick="switchTab('general')"><i class="fas fa-file-invoice-dollar"></i> ৬. সাধারণ খরচ (বিল/শ্রমিক)</button>
+                <button class="tab-btn" onclick="switchTab('paumihatch')"><i class="fas fa-crow"></i> ২. পাউমি মুরগি ও ডিম/বাচ্চা</button>
+                <button class="tab-btn" onclick="switchTab('incubator')"><i class="fas fa-box-open"></i> ৩. ইনকিউবেটর ও বাচ্চা</button>
+                <button class="tab-btn" onclick="switchTab('broiler')"><i class="fas fa-drumstick-bite"></i> ৪. মাংসের মুরগি (Broiler)</button>
+                <button class="tab-btn" onclick="switchTab('sonali')"><i class="fas fa-feather-alt"></i> ৫. সোনালী ও দেশি মুরগি</button>
+                <button class="tab-btn" onclick="switchTab('feedmed')"><i class="fas fa-pills"></i> ৬. ফিড ও মেডিসিন স্টক</button>
+                <button class="tab-btn" onclick="switchTab('general')"><i class="fas fa-file-invoice-dollar"></i> ৭. সাধারণ খরচ (বিল/শ্রমিক)</button>
             </div>
 
             <div id="tab-container-area"></div>
@@ -285,6 +286,7 @@
         let currentUser = '';
         const categories = [
             { id: 'layer', name: 'ডিমের মুরগি (Layer)', icon: 'fa-egg', items: ['লেয়ার ফিড ক্রয়', 'ডিম বিক্রি', 'কমিশন/অন্যান্য আয়', 'লেয়ার মুরগি বিক্রি'] },
+            { id: 'paumihatch', name: 'পাউমি মুরগি (ডিম ও শেষ বয়সে মুরগি বিক্রি)', icon: 'fa-crow', items: ['পাউমি মুরগি ও বাচ্চা ক্রয়', 'পাউমি ফিড ও খাবার খরচ', 'পাউমি ডিম বিক্রি (আয়)', 'ডিম শেষ হওয়ার পর পাউমি মুরগি বিক্রি (আয়)', 'মেডিসিন ও অন্যান্য খরচ'] },
             { id: 'incubator', name: 'ইনকিউবেটর ও বাচ্চা বিক্রি', icon: 'fa-box-open', items: ['হ্যাচিং ডিম সংগ্রহ', 'ইনকিউবেটর কারেন্ট বিল', 'বাচ্চা বিক্রি (আয়)', 'বক্স ও পরিবহন খরচ'] },
             { id: 'broiler', name: 'মাংসের মুরগি (Broiler)', icon: 'fa-drumstick-bite', items: ['ব্রয়লার বাচ্চার দাম', 'ব্রয়লার ফিড ক্রয়', 'মুরগি বিক্রি (আয়)', 'ওষুধ ও ভিটামিন'] },
             { id: 'sonali', name: 'সোনালী ও দেশি মুরগি', icon: 'fa-feather-alt', items: ['সোনালী/দেশি বাচ্চা ক্রয়', 'ফিড ও খাবার খরচ', 'সোনালী/দেশি মুরগি বিক্রি', 'চিকিৎসা ও অন্যান্য খরচ'] },
@@ -418,8 +420,22 @@
 
         function addEntry(catId) {
             const date = document.getElementById(`${catId}-date`).value;
-            const desc = document.getElementById(`${catId}-desc`).value; const type = document.getElementById(`${catId}-type`).value;
-            const amount = parseFloat(document.getElementById(`${catId}-amount`).value);  if(!date \vert{}\vert{} !desc \vert{}\vert{} isNaN(amount) \vert{}\vert{} amount <= 0) { alert('দয়া করে সঠিক তারিখ, খাত এবং টাকার পরিমাণ দিন।'); return; }  if(!allData[catId]) allData[catId] = []; allData[catId].push({ id: Date.now(), date, desc, type, amount });  saveDataToStorage(); renderCategory(catId);  document.getElementById(`${catId}-amount`).value = '';
+            const desc = document.getElementById(`${catId}-desc`).value;
+            const type = document.getElementById(`${catId}-type`).value;
+            const amount = parseFloat(document.getElementById(`${catId}-amount`).value);
+
+            if(!date || !desc || isNaN(amount) || amount <= 0) {
+                alert('দয়া করে সঠিক তারিখ, খাত এবং টাকার পরিমাণ দিন।');
+                return;
+            }
+
+            if(!allData[catId]) allData[catId] = [];
+            allData[catId].push({ id: Date.now(), date, desc, type, amount });
+            
+            saveDataToStorage();
+            renderCategory(catId);
+
+            document.getElementById(`${catId}-amount`).value = '';
         }
 
         function deleteEntry(catId, id) {
@@ -462,7 +478,7 @@
                     <td>${t.desc}</td>
                     <td>${typeBadge}</td>
                     <td class="text-right">৳ ${t.amount.toLocaleString('en-IN')}</td>
-                    <td class="text-right"><button class="btn btn-danger" onclick="deleteEntry('${catId}',${t.id})">মুছুন</button></td>
+                    <td class="text-right"><button class="btn btn-danger" onclick="deleteEntry('${catId}', ${t.id})">মুছুন</button></td>
                 </tr>`;
             });
 
