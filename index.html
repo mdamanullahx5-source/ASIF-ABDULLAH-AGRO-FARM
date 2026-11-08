@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>আসিফ আব্দুল্লাহ এগ্রো ফার্ম - সম্পূর্ণ ক্যাটাগরি হিসাব ও লাভ-ক্ষতি ড্যাশবোর্ড</title>
+    <title>আসিফ আব্দুল্লাহ এগ্রো ফার্ম - সম্পূর্ণ ক্যাটাগরি ও ওভারভিউ ড্যাশবোর্ড</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -248,7 +248,7 @@
         <!-- Gmail Login Card -->
         <div class="card" id="login-card">
             <h2><i class="fas fa-envelope"></i> জিমেইল দিয়ে আপনার হিসাব সুরক্ষিত রাখুন</h2>
-            <p style="margin-bottom: 15px; font-size: 0.95rem; color: #555;">আপনার জিমেইল আইডি এন্ট্রি করলে এই ব্রাউজারে আপনার ফার্মের হিসাব আলাদাভাবে সেভ থাকবে।</p>
+            <p style="margin-bottom: 15px; font-size: 0.95rem; color: #555;">আপনার জিমেইল আইডি এন্ট্রি করলে এই ব্রাউজারে আপনার ফার্মের হিসাব আলাদাভাবে সেভ থাকবে[cite: 2, 5]।</p>
             <div class="form-grid" style="max-width: 500px;">
                 <div class="form-group">
                     <label>আপনার জিমেইল (Gmail) লিখুন:</label>
@@ -262,18 +262,19 @@
         <div id="dashboard-content" style="display: none;">
 
             <div class="sync-note">
-                <i class="fas fa-check-circle"></i> জিমেইল: (<span id="active-email-span"></span>) - হিসাব স্বয়ংক্রিয়ভাবে সংরক্ষিত হচ্ছে।
+                <i class="fas fa-check-circle"></i> জিমেইল: (<span id="active-email-span"></span>) - হিসাব স্বয়ংক্রিয়ভাবে সংরক্ষিত হচ্ছে[cite: 5]।
             </div>
 
             <!-- Category Navigation Tabs -->
             <div class="tabs-nav">
-                <button class="tab-btn active" onclick="switchTab('layer')"><i class="fas fa-egg"></i> ১. ডিমের মুরগি (Layer)</button>
+                <button class="tab-btn active" onclick="switchTab('overview')"><i class="fas fa-chart-pie"></i> ০. ওভারভিউ (সব সেক্টরের সারসংক্ষেপ)</button>
+                <button class="tab-btn" onclick="switchTab('layer')"><i class="fas fa-egg"></i> ১. ডিমের মুরগি (Layer)</button>
                 <button class="tab-btn" onclick="switchTab('paumihatch')"><i class="fas fa-crow"></i> ২. পাউমি মুরগি ও ডিম/বাচ্চা</button>
                 <button class="tab-btn" onclick="switchTab('incubator')"><i class="fas fa-box-open"></i> ৩. ইনকিউবেটর ও বাচ্চা</button>
                 <button class="tab-btn" onclick="switchTab('broiler')"><i class="fas fa-drumstick-bite"></i> ৪. মাংসের মুরগি (Broiler)</button>
                 <button class="tab-btn" onclick="switchTab('sonali')"><i class="fas fa-feather-alt"></i> ৫. সোনালী ও দেশি মুরগি</button>
                 <button class="tab-btn" onclick="switchTab('feedmed')"><i class="fas fa-pills"></i> ৬. ফিড ও মেডিসিন স্টক</button>
-                <button class="tab-btn" onclick="switchTab('general')"><i class="fas fa-file-invoice-dollar"></i> ৭. সাধারণ খরচ (বিল/শ্রমিক)</button>
+                <button class="tab-btn" onclick="switchTab('general')"><i class="fas fa-file-invoice-dollar"></i> ৭. সাধারণ খরচ (বিল/শ্রমিক/আসবাবপত্র)</button>
             </div>
 
             <div id="tab-container-area"></div>
@@ -291,7 +292,7 @@
             { id: 'broiler', name: 'মাংসের মুরগি (Broiler)', icon: 'fa-drumstick-bite', items: ['ব্রয়লার বাচ্চার দাম', 'ব্রয়লার ফিড ক্রয়', 'মুরগি বিক্রি (আয়)', 'ওষুধ ও ভিটামিন'] },
             { id: 'sonali', name: 'সোনালী ও দেশি মুরগি', icon: 'fa-feather-alt', items: ['সোনালী/দেশি বাচ্চা ক্রয়', 'ফিড ও খাবার খরচ', 'সোনালী/দেশি মুরগি বিক্রি', 'চিকিৎসা ও অন্যান্য খরচ'] },
             { id: 'feedmed', name: 'ফিড ও মেডিসিন স্টক', icon: 'fa-pills', items: ['নতুন ফিড স্টক ক্রয়', 'মেডিসিন ও ভ্যাকসিন ক্রয়', 'ফিড ব্যবহার/বিক্রি', 'অন্যান্য স্টক খরচ'] },
-            { id: 'general', name: 'সাধারণ খরচ (বিল/শ্রমিক)', icon: 'fa-file-invoice-dollar', items: ['বিদ্যুৎ/কারেন্ট বিল', 'শ্রমিক ও কর্মচারীর বেতন', 'ফার্ম মেরামত ও রক্ষণাবেক্ষণ', 'যাতায়াত ও অন্যান্য খরচ'] }
+            { id: 'general', name: 'সাধারণ খরচ (বিল, শ্রমিক ও আসবাবপত্র)', icon: 'fa-file-invoice-dollar', items: ['বিদ্যুৎ/কারেন্ট বিল', 'শ্রমিক ও কর্মচারীর বেতন', 'খামারের আসবাবপত্র ক্রয় ও মেরামত', 'ফার্ম মেরামত ও রক্ষণাবেক্ষণ', 'যাতায়াত ও অন্যান্য খরচ'] }
         ];
 
         let allData = {};
@@ -332,11 +333,52 @@
                 categories.forEach(cat => { allData[cat.id] = []; });
             }
             buildTabsHTML();
-            switchTab(categories[0].id);
+            switchTab('overview');
         }
 
         function buildTabsHTML() {
             let containerHtml = '';
+
+            // Overview Tab HTML
+            containerHtml += `
+                <div id="tab-overview" class="tab-content">
+                    <div class="summary-grid">
+                        <div class="stat-box">
+                            <h4>সর্বমোট খরচ (সব সেক্টর মিলিয়ে)</h4>
+                            <p>৳ <span id="grand-exp">0</span></p>
+                        </div>
+                        <div class="stat-box" style="border-left-color: var(--success);">
+                            <h4>সর্বমোট আয় (সব সেক্টর মিলিয়ে)</h4>
+                            <p>৳ <span id="grand-inc">0</span></p>
+                        </div>
+                        <div class="stat-box" style="border-left-color: #17a2b8;">
+                            <h4>ফার্মের সামগ্রিক লাভ / ক্ষতি</h4>
+                            <p>৳ <span id="grand-profit">0</span></p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2><i class="fas fa-list-alt"></i> সেক্টর অনুযায়ী লাভ ও ক্ষতির তুলনামূলক তালিকা</h2>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>সেক্টরের নাম</th>
+                                        <th class="text-right">মোট খরচ</th>
+                                        <th class="text-right">মোট আয়</th>
+                                        <th class="text-right">অবস্থা (লাভ/ক্ষতি)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="overview-sector-tbody">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Category Tabs HTML
             categories.forEach((cat) => {
                 let optionsHtml = '';
                 cat.items.forEach(item => {
@@ -404,14 +446,18 @@
             
             document.getElementById('tab-' + tabName).classList.add('active');
             
-            const buttons = document.querySelectorAll('.tab-btn');
-            categories.forEach((cat, idx) => {
-                if(cat.id === tabName && buttons[idx]) {
-                    buttons[idx].classList.add('active');
-                }
-            });
-
-            renderCategory(tabName);
+            if(tabName === 'overview') {
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                renderOverview();
+            } else {
+                const buttons = document.querySelectorAll('.tab-btn');
+                categories.forEach((cat, idx) => {
+                    if(cat.id === tabName && buttons[idx + 1]) {
+                        buttons[idx + 1].classList.add('active');
+                    }
+                });
+                renderCategory(tabName);
+            }
         }
 
         function saveDataToStorage() {
@@ -499,6 +545,64 @@
                 netElem.innerText = '৳ ০ (সমান সমান)';
                 netElem.style.color = 'var(--text-dark)';
             }
+        }
+
+        function renderOverview() {
+            let grandExp = 0;
+            let grandInc = 0;
+            let tableHtml = '';
+
+            categories.forEach(cat => {
+                const items = allData[cat.id] || [];
+                let catExp = 0;
+                let catInc = 0;
+
+                items.forEach(t => {
+                    if(t.type === 'expense') catExp += t.amount;
+                    else catInc += t.amount;
+                });
+
+                grandExp += catExp;
+                grandInc += catInc;
+
+                const catNet = catInc - catExp;
+                let statusBadge = '';
+                if(catNet > 0) {
+                    statusBadge = `<span style="color: var(--success); font-weight:600;">লাভ: ৳ ${catNet.toLocaleString('en-IN')}</span>`;
+                } else if(catNet < 0) {
+                    statusBadge = `<span style="color: var(--danger); font-weight:600;">ক্ষতি: ৳ ${Math.abs(catNet).toLocaleString('en-IN')}</span>`;
+                } else {
+                    statusBadge = `<span style="color: #6c757d;">৳ ০ (সমান সমান)</span>`;
+                }
+
+                tableHtml += `
+                    <tr>
+                        <td><strong>${cat.name}</strong></td>
+                        <td class="text-right">৳ ${catExp.toLocaleString('en-IN')}</td>
+                        <td class="text-right">৳ ${catInc.toLocaleString('en-IN')}</td>
+                        <td class="text-right">${statusBadge}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('grand-exp').innerText = grandExp.toLocaleString('en-IN');
+            document.getElementById('grand-inc').innerText = grandInc.toLocaleString('en-IN');
+
+            const grandNet = grandInc - grandExp;
+            const grandElem = document.getElementById('grand-profit');
+            
+            if (grandNet > 0) {
+                grandElem.innerText = 'লাভ: ৳ ' + grandNet.toLocaleString('en-IN');
+                grandElem.style.color = 'var(--success)';
+            } else if (grandNet < 0) {
+                grandElem.innerText = 'ক্ষতি: ৳ ' + Math.abs(grandNet).toLocaleString('en-IN');
+                grandElem.style.color = 'var(--danger)';
+            } else {
+                grandElem.innerText = '৳ ০ (সমান সমান)';
+                grandElem.style.color = 'var(--text-dark)';
+            }
+
+            document.getElementById('overview-sector-tbody').innerHTML = tableHtml;
         }
     </script>
 </body>
