@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>আসিফ আব্দুল্লাহ এগ্রো ফার্ম - হিসাবের ড্যাশবোর্ড</title>
+    <title>আসিফ আব্দুল্লাহ এগ্রো ফার্ম - সম্পূর্ণ ক্যাটাগরি হিসাবের ড্যাশবোর্ড</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -30,7 +30,6 @@
             line-height: 1.6;
         }
 
-        /* Top Header */
         header {
             background-color: var(--primary);
             color: var(--white);
@@ -59,9 +58,8 @@
             font-size: 0.9rem;
         }
 
-        /* Container */
         .container {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 30px auto;
             padding: 0 15px;
         }
@@ -85,7 +83,416 @@
             gap: 10px;
         }
 
-        /* Grid forms & Stats */
+        /* Tabs Navigation */
+        .tabs-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background-color: #e0e0e0;
+            color: var(--text-dark);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         .form-grid {
             display: grid;
-            grid-template-columns:
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group select {
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            background-color: var(--primary-light);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            padding: 5px 10px;
+            font-size: 0.85rem;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--accent);
+        }
+
+        .stat-box h4 {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+
+        .stat-box p {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--text-dark);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table th, table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+            font-size: 0.95rem;
+        }
+
+        table th {
+            background-color: #f1f3f5;
+            color: var(--text-dark);
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .sync-note {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-kiwi-bird"></i> আসিফ আব্দুল্লাহ এগ্রো ফার্ম
+        </div>
+        <div class="user-profile" id="user-display">
+            <i class="fas fa-user-circle"></i> <span id="current-user-email">guest@gmail.com</span>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Gmail Login Card -->
+        <div class="card" id="login-card">
+            <h2><i class="fas fa-envelope"></i> জিমেইল দিয়ে আপনার হিসাব সুরক্ষিত রাখুন</h2>
+            <p style="margin-bottom: 15px; font-size: 0.95rem; color: #555;">আপনার জিমেইল আইডি এন্ট্রি করলে এই ব্রাউজারে আপনার ফার্মের হিসাব আলাদাভাবে সেভ থাকবে।</p>
+            <div class="form-grid" style="max-width: 500px;">
+                <div class="form-group">
+                    <label>আপনার জিমেইল (Gmail) লিখুন:</label>
+                    <input type="email" id="user-email-input" placeholder="example@gmail.com">
+                </div>
+            </div>
+            <button class="btn" onclick="saveUserEmail()">হিসাব শুরু করুন</button>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div id="dashboard-content" style="display: none;">
+
+            <div class="sync-note">
+                <i class="fas fa-check-circle"></i> জিমেইল: (<span id="active-email-span"></span>) - হিসাব স্বয়ংক্রিয়ভাবে সংরক্ষিত হচ্ছে।
+            </div>
+
+            <!-- Category Navigation Tabs (6 Categories) -->
+            <div class="tabs-nav">
+                <button class="tab-btn active" onclick="switchTab('layer')"><i class="fas fa-egg"></i> ১. ডিমের মুরগি (Layer)</button>
+                <button class="tab-btn" onclick="switchTab('incubator')"><i class="fas fa-box-open"></i> ২. ইনকিউবেটর ও বাচ্চা</button>
+                <button class="tab-btn" onclick="switchTab('broiler')"><i class="fas fa-drumstick-bite"></i> ৩. মাংসের মুরগি (Broiler)</button>
+                <button class="tab-btn" onclick="switchTab('sonali')"><i class="fas fa-feather-alt"></i> ৪. সোনালী ও দেশি মুরগি</button>
+                <button class="tab-btn" onclick="switchTab('feedmed')"><i class="fas fa-pills"></i> ৫. ফিড ও মেডিসিন স্টক</button>
+                <button class="tab-btn" onclick="switchTab('general')"><i class="fas fa-file-invoice-dollar"></i> ৬. সাধারণ খরচ (বিল/শ্রমিক)</button>
+            </div>
+
+            <!-- RENDER FUNCTION GENERATOR FOR TABS -->
+            <!-- We will use a generic builder function in JS or multi blocks -->
+
+            <div id="tab-container-area">
+                <!-- Dynamic Content Container -->
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        let currentUser = '';
+        const categories = [
+            { id: 'layer', name: 'ডিমের মুরগি (Layer)', icon: 'fa-egg', items: ['লেয়ার ফিড ক্রয়', 'ডিম বিক্রি', 'কমিশন/অন্যান্য আয়', 'লেয়ার মুরগি বিক্রি'] },
+            { id: 'incubator', name: 'ইনকিউবেটর ও বাচ্চা বিক্রি', icon: 'fa-box-open', items: ['হ্যাচিং ডিম সংগ্রহ', 'ইনকিউবেটর কারেন্ট বিল', 'বাচ্চা বিক্রি (আয়)', 'বক্স ও পরিবহন খরচ'] },
+            { id: 'broiler', name: 'মাংসের মুরগি (Broiler)', icon: 'fa-drumstick-bite', items: ['ব্রয়লার বাচ্চার দাম', 'ব্রয়লার ফিড ক্রয়', 'মুরগি বিক্রি (আয়)', 'ওষুধ ও ভিটামিন'] },
+            { id: 'sonali', name: 'সোনালী ও দেশি মুরগি', icon: 'fa-feather-alt', items: ['সোনালী/দেশি বাচ্চা ক্রয়', 'ফিড ও খাবার খরচ', 'সোনালী/দেশি মুরগি বিক্রি', 'চিকিৎসা ও অন্যান্য খরচ'] },
+            { id: 'feedmed', name: 'ফিড ও মেডিসিন স্টক', icon: 'fa-pills', items: ['নতুন ফিড স্টক ক্রয়', 'মেডিসিন ও ভ্যাকসিন ক্রয়', 'ফিড ব্যবহার/বিক্রি', 'অন্যান্য স্টক খরচ'] },
+            { id: 'general', name: 'সাধারণ খরচ (বিল/শ্রমিক)', icon: 'fa-file-invoice-dollar', items: ['বিদ্যুৎ/কারেন্ট বিল', 'শ্রমিক ও কর্মচারীর বেতন', 'ফার্ম মেরামত ও রক্ষণাবেক্ষণ', 'যাতায়াত ও অন্যান্য খরচ'] }
+        ];
+
+        let allData = {};
+
+        window.onload = function() {
+            const savedEmail = localStorage.getItem('poultry_user_email');
+            if (savedEmail) {
+                currentUser = savedEmail;
+                document.getElementById('current-user-email').innerText = currentUser;
+                document.getElementById('active-email-span').innerText = currentUser;
+                document.getElementById('login-card').style.display = 'none';
+                document.getElementById('dashboard-content').style.display = 'block';
+                initDashboard();
+            }
+        }
+
+        function saveUserEmail() {
+            const emailInput = document.getElementById('user-email-input').value.trim();
+            if(!emailInput || !emailInput.includes('@gmail.com')) {
+                alert('দয়া করে একটি সঠিক জিমেইল (Gmail) অ্যাড্রেস লিখুন।');
+                return;
+            }
+            currentUser = emailInput;
+            localStorage.setItem('poultry_user_email', currentUser);
+            
+            document.getElementById('current-user-email').innerText = currentUser;
+            document.getElementById('active-email-span').innerText = currentUser;
+            document.getElementById('login-card').style.display = 'none';
+            document.getElementById('dashboard-content').style.display = 'block';
+            initDashboard();
+        }
+
+        function initDashboard() {
+            const dataStr = localStorage.getItem('poultry_all_data_' + currentUser);
+            if (dataStr) {
+                allData = JSON.parse(dataStr);
+            } else {
+                categories.forEach(cat => { allData[cat.id] = []; });
+            }
+            buildTabsHTML();
+            switchTab(categories[0].id);
+        }
+
+        function buildTabsHTML() {
+            let containerHtml = '';
+            categories.forEach((cat, index) => {
+                let optionsHtml = '';
+                cat.items.forEach(item => {
+                    optionsHtml += `<option value="${item}">${item}</option>`;
+                });
+
+                containerHtml += `
+                    <div id="tab-${cat.id}" class="tab-content">
+                        <div class="summary-grid">
+                            <div class="stat-box">
+                                <h4>মোট খরচ</h4>
+                                <p>৳ <span id="${cat.id}-exp">0</span></p>
+                            </div>
+                            <div class="stat-box" style="border-left-color: var(--success);">
+                                <h4>মোট আয়</h4>
+                                <p>৳ <span id="${cat.id}-inc">0</span></p>
+                            </div>
+                            <div class="stat-box" style="border-left-color: #17a2b8;">
+                                <h4>নেট লাভ / ক্ষতি</h4>
+                                <p>৳ <span id="${cat.id}-profit">0</span></p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h2><i class="fas fa-plus-circle"></i> ${cat.name} - নতুন হিসাব যোগ করুন</h2>
+                            <div class="form-grid">
+                                <div class="form-group"><label>তারিখ:</label><input type="date" id="${cat.id}-date" value="${new Date().toISOString().split('T')[0]}"></div>
+                                <div class="form-group">
+                                    <label>খাতের নাম:</label>
+                                    <select id="${cat.id}-desc">
+                                        ${optionsHtml}
+                                        <option value="অন্যান্য">অন্যান্য</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>ধরণ:</label>
+                                    <select id="${cat.id}-type">
+                                        <option value="expense">খরচ (Expense)</option>
+                                        <option value="income">আয় (Income)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group"><label>টাকার পরিমাণ:</label><input type="number" id="${cat.id}-amount" placeholder="যেমন: ৫০০০"></div>
+                            </div>
+                            <button class="btn" onclick="addEntry('${cat.id}')">এন্ট্রি সেভ করুন</button>
+                        </div>
+
+                        <div class="card">
+                            <h2><i class="fas fa-history"></i> ${cat.name} - হিসাবের খাতা</h2>
+                            <div class="table-responsive">
+                                <table>
+                                    <thead><tr><th>তারিখ</th><th>খাতের নাম</th><th>ধরণ</th><th class="text-right">পরিমাণ</th><th class="text-right">পদক্ষেপ</th></tr></thead>
+                                    <tbody id="list-${cat.id}"><tr><td colspan="5" style="text-align: center; color: #777;">কোনো হিসাব পাওয়া যায়নি।</td></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('tab-container-area').innerHTML = containerHtml;
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById('tab-' + tabName).classList.add('active');
+            
+            // Find and activate the correct button
+            const buttons = document.querySelectorAll('.tab-btn');
+            categories.forEach((cat, idx) => {
+                if(cat.id === tabName && buttons[idx]) {
+                    buttons[idx].classList.add('active');
+                }
+            });
+
+            renderCategory(tabName);
+        }
+
+        function saveDataToStorage() {
+            localStorage.setItem('poultry_all_data_' + currentUser, JSON.stringify(allData));
+        }
+
+        function addEntry(catId) {
+            const date = document.getElementById(`${catId}-date`).value;
+            const desc = document.getElementById(`${catId}-desc`).value;
+            const type = document.getElementById(`${catId}-type`).value;
+            const amount = parseFloat(document.getElementById(`${catId}-amount`).value);
+
+            if(!date || !desc || isNaN(amount) || amount <= 0) {
+                alert('দয়া করে সঠিক তারিখ, খাত এবং টাকার পরিমাণ দিন।');
+                return;
+            }
+
+            if(!allData[catId]) allData[catId] = [];
+            allData[catId].push({ id: Date.now(), date, desc, type, amount });
+            
+            saveDataToStorage();
+            renderCategory(catId);
+
+            document.getElementById(`${catId}-amount`).value = '';
+        }
+
+        function deleteEntry(catId, id) {
+            allData[catId] = allData[catId].filter(t => t.id !== id);
+            saveDataToStorage();
+            renderCategory(catId);
+        }
+
+        function renderCategory(catId) {
+            const items = allData[catId] || [];
+            const tbody = document.getElementById('list-' + catId);
+            if(!tbody) return;
+
+            if(items.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #777;">কোনো হিসাব পাওয়া যায়নি।</td></tr>';
+                document.getElementById(catId + '-exp').innerText = '০';
+                document.getElementById(catId + '-inc').innerText = '০';
+                document.getElementById(catId + '-profit').innerText = '০';
+                return;
+            }
+
+            let html = '';
+            let totalExp = 0;
+            let totalInc = 0;
+
+            items.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            items.forEach(t => {
+                if(t.type === 'expense') totalExp += t.amount;
+                else totalInc += t.amount;
+
+                const typeBadge = t.type === 'expense' ? 
+                    '<span style="color: var(--danger); font-weight:600;">খরচ</span>' : 
+                    '<span style="color: var(--success); font-weight:600;">আয়</span>';
+
+                html += `<tr>
+                    <td>${t.date}</td>
+                    <td>${t.desc}</td>
+                    <td>${typeBadge}</td>
+                    <td class="text-right">৳ ${t.amount.toLocaleString('en-IN')}</td>
+                    <td class="text-right"><button class="btn btn-danger" onclick="deleteEntry('${catId}', ${t.id})">মুছুন</button></td>
+                </tr>`;
+            });
+
+            tbody.innerHTML = html;
+            document.getElementById(catId + '-exp').innerText = totalExp.toLocaleString('en-IN');
+            document.getElementById(catId + '-inc').innerText = totalInc.toLocaleString('en-IN');
+            
+            const net = totalInc - totalExp;
+            const netElem = document.getElementById(catId + '-profit');
+            netElem.innerText = net.toLocaleString('en-IN');
+            netElem.style.color = net >= 0 ? 'var(--success)' : 'var(--danger)';
+        }
+    </script>
+</body>
+</html>
