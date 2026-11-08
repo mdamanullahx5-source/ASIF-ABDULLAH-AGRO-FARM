@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>আসিফ আব্দুল্লাহ এগ্রো ফার্ম - সম্পূর্ণ ক্যাটাগরি হিসাবের ড্যাশবোর্ড</title>
+    <title>আসিফ আব্দুল্লাহ এগ্রো ফার্ম - সম্পূর্ণ ক্যাটাগরি হিসাব ও লাভ-ক্ষতি ড্যাশবোর্ড</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
@@ -265,7 +265,7 @@
                 <i class="fas fa-check-circle"></i> জিমেইল: (<span id="active-email-span"></span>) - হিসাব স্বয়ংক্রিয়ভাবে সংরক্ষিত হচ্ছে।
             </div>
 
-            <!-- Category Navigation Tabs (6 Categories) -->
+            <!-- Category Navigation Tabs -->
             <div class="tabs-nav">
                 <button class="tab-btn active" onclick="switchTab('layer')"><i class="fas fa-egg"></i> ১. ডিমের মুরগি (Layer)</button>
                 <button class="tab-btn" onclick="switchTab('incubator')"><i class="fas fa-box-open"></i> ২. ইনকিউবেটর ও বাচ্চা</button>
@@ -275,12 +275,7 @@
                 <button class="tab-btn" onclick="switchTab('general')"><i class="fas fa-file-invoice-dollar"></i> ৬. সাধারণ খরচ (বিল/শ্রমিক)</button>
             </div>
 
-            <!-- RENDER FUNCTION GENERATOR FOR TABS -->
-            <!-- We will use a generic builder function in JS or multi blocks -->
-
-            <div id="tab-container-area">
-                <!-- Dynamic Content Container -->
-            </div>
+            <div id="tab-container-area"></div>
 
         </div>
 
@@ -340,7 +335,7 @@
 
         function buildTabsHTML() {
             let containerHtml = '';
-            categories.forEach((cat, index) => {
+            categories.forEach((cat) => {
                 let optionsHtml = '';
                 cat.items.forEach(item => {
                     optionsHtml += `<option value="${item}">${item}</option>`;
@@ -387,7 +382,7 @@
                         </div>
 
                         <div class="card">
-                            <h2><i class="fas fa-history"></i> ${cat.name} - হিসাবের খাতা</h2>
+                            <h2><i class="fas fa-history"></i> ${cat.name} - হিসাবের খাতা ও লাভ/ক্ষতি</h2>
                             <div class="table-responsive">
                                 <table>
                                     <thead><tr><th>তারিখ</th><th>খাতের নাম</th><th>ধরণ</th><th class="text-right">পরিমাণ</th><th class="text-right">পদক্ষেপ</th></tr></thead>
@@ -407,7 +402,6 @@
             
             document.getElementById('tab-' + tabName).classList.add('active');
             
-            // Find and activate the correct button
             const buttons = document.querySelectorAll('.tab-btn');
             categories.forEach((cat, idx) => {
                 if(cat.id === tabName && buttons[idx]) {
@@ -424,22 +418,8 @@
 
         function addEntry(catId) {
             const date = document.getElementById(`${catId}-date`).value;
-            const desc = document.getElementById(`${catId}-desc`).value;
-            const type = document.getElementById(`${catId}-type`).value;
-            const amount = parseFloat(document.getElementById(`${catId}-amount`).value);
-
-            if(!date || !desc || isNaN(amount) || amount <= 0) {
-                alert('দয়া করে সঠিক তারিখ, খাত এবং টাকার পরিমাণ দিন।');
-                return;
-            }
-
-            if(!allData[catId]) allData[catId] = [];
-            allData[catId].push({ id: Date.now(), date, desc, type, amount });
-            
-            saveDataToStorage();
-            renderCategory(catId);
-
-            document.getElementById(`${catId}-amount`).value = '';
+            const desc = document.getElementById(`${catId}-desc`).value; const type = document.getElementById(`${catId}-type`).value;
+            const amount = parseFloat(document.getElementById(`${catId}-amount`).value);  if(!date \vert{}\vert{} !desc \vert{}\vert{} isNaN(amount) \vert{}\vert{} amount <= 0) { alert('দয়া করে সঠিক তারিখ, খাত এবং টাকার পরিমাণ দিন।'); return; }  if(!allData[catId]) allData[catId] = []; allData[catId].push({ id: Date.now(), date, desc, type, amount });  saveDataToStorage(); renderCategory(catId);  document.getElementById(`${catId}-amount`).value = '';
         }
 
         function deleteEntry(catId, id) {
@@ -457,7 +437,9 @@
                 tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #777;">কোনো হিসাব পাওয়া যায়নি।</td></tr>';
                 document.getElementById(catId + '-exp').innerText = '০';
                 document.getElementById(catId + '-inc').innerText = '০';
-                document.getElementById(catId + '-profit').innerText = '০';
+                const netElem = document.getElementById(catId + '-profit');
+                netElem.innerText = '০';
+                netElem.style.color = 'var(--text-dark)';
                 return;
             }
 
@@ -480,7 +462,7 @@
                     <td>${t.desc}</td>
                     <td>${typeBadge}</td>
                     <td class="text-right">৳ ${t.amount.toLocaleString('en-IN')}</td>
-                    <td class="text-right"><button class="btn btn-danger" onclick="deleteEntry('${catId}', ${t.id})">মুছুন</button></td>
+                    <td class="text-right"><button class="btn btn-danger" onclick="deleteEntry('${catId}',${t.id})">মুছুন</button></td>
                 </tr>`;
             });
 
@@ -490,8 +472,17 @@
             
             const net = totalInc - totalExp;
             const netElem = document.getElementById(catId + '-profit');
-            netElem.innerText = net.toLocaleString('en-IN');
-            netElem.style.color = net >= 0 ? 'var(--success)' : 'var(--danger)';
+            
+            if (net > 0) {
+                netElem.innerText = 'লাভ: ৳ ' + net.toLocaleString('en-IN');
+                netElem.style.color = 'var(--success)';
+            } else if (net < 0) {
+                netElem.innerText = 'ক্ষতি: ৳ ' + Math.abs(net).toLocaleString('en-IN');
+                netElem.style.color = 'var(--danger)';
+            } else {
+                netElem.innerText = '৳ ০ (সমান সমান)';
+                netElem.style.color = 'var(--text-dark)';
+            }
         }
     </script>
 </body>
